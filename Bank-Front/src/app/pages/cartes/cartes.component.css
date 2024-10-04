@@ -1,0 +1,31 @@
+.wrapper{
+    display: flex;
+    width: 80%;
+    margin-left: 250px;
+}
+
+.wrapper-body{
+    margin-left: 20px;
+}
+.cartes-body{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+.left-container{
+    margin-top: 80px;
+}
+.card-info{
+    margin-top: 30px;
+    display: flex;
+    justify-content: start;
+    font-size: 17px;
+}
+.card-info table{
+    width: 70%;padding-bottom: 20px;
+}
+
+.right-container{
+    margin-left: 30px;
+}

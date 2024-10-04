@@ -1,0 +1,140 @@
+.wrapper{
+    width: 80%;
+    min-height: 100vh;
+    display: flex;
+    margin-left: 250px;
+}
+
+.dahsboard-header{
+    width: 75vw;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: start;
+    margin-left: 30px;
+    margin-top: 30px;
+}
+.customer-info img{
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+    cursor: pointer;
+}
+.wrapper-title{
+    font-size: 18px;
+    font-weight: 600;
+}
+.customer-info{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.dahsboard-body{
+    width: 100%;
+    margin-left: 30px;
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.left-container{
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    width: 60%;
+    gap: 20px;
+}
+
+.credit-account-container{
+    width: 50%;
+    height: 180px;
+    background-color: var(--background-weak);
+    border-radius: 15px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.credit-account-top{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: 20px;
+}
+#high-arrow{
+    color: green;
+}
+.credit-account-midle{
+    display: flex;
+    justify-content: start;
+    margin-left: 20px;
+    font-size: 22px;
+    font-weight: 700;
+}
+.credit-account-bottom{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.saving-account-container{
+    width: 35%;
+    height: 180px;
+    background-color: var(--background-weak);
+    border-radius: 15px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.statis-container{
+    width: 88%;
+    height: 400px;
+    margin-top: 30px;
+}
+.statis-header{
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+}
+#chartKey{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #3B5999;
+    margin-right: 10px;
+}
+
+.right-container{
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    margin-left: -30px;
+}
+.transaction-container{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.transaction-header{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.transactions-list{
+    margin-top: 20px;
+    height: 350px;
+    overflow-y: auto;
+
+}
+.filter-transaction span{
+    margin-right: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.selectFilter{
+    font-weight: bold;
+    text-decoration: underline;
+}

@@ -1,0 +1,104 @@
+.wrapper{
+    width: 80%;
+    min-height: 100vh;
+    display: flex;
+    margin-left: 250px;
+    overflow: hidden;
+}
+
+.transaction-body{
+    display: flex;
+    max-width: 100%;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.left-container{
+    width: 60%;
+}
+.account-info{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.account-select select{
+    width: 400px;
+    height: 50px;
+    background-color: var(--background-weak);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.credit-account-container{
+    width: 400px;
+    background-color: var(--background-weak);
+    border-radius: 15px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+.chartBars{
+    width: 500px;
+    height: 400px;
+    margin-top: 20px;
+}
+
+.credit-account-top{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: 20px;
+}
+#high-arrow{
+    color: green;
+}
+.credit-account-midle{
+    display: flex;
+    justify-content: start;
+    margin-left: 20px;
+    margin-top: -10px;
+    font-size: 22px;
+    font-weight: 700;
+}
+.credit-account-bottom{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.right-container{
+    display: flex;
+    flex-direction: column;
+    width: 30%;    
+    margin-left: 10px;
+    margin-top: 40px;
+}
+.transaction-container{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.transaction-header{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.transactions-list{
+    margin-top: 20px;
+    min-height: 100%;
+    overflow-y: auto;
+
+}
+.filter-transaction span{
+    margin-right: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.selectFilter{
+    font-weight: bold;
+    text-decoration: underline;
+}

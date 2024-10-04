@@ -1,0 +1,44 @@
+<div class="wrapper">
+    <app-sidebar />
+    <div class="wrapper-body">
+        <app-header title="Profile" />
+
+        <div class="customer-info">
+            <table>
+                <tr>
+                    <td>Client Id: </td>
+                    <td><b>{{ customerService.customer()?.customerId }}</b></td>
+                </tr>
+                <tr>
+                    <td>Nom et prénom: </td>
+                    <td><b>{{ customerService.customer()?.name }}</b></td>
+                </tr>
+                <tr>
+                    <td>CIN: </td>
+                    <td><b>{{ customerService.customer()?.cin }}</b></td>
+                </tr>
+                <tr>
+                    <td>Adresse postale: </td>
+                    <td><b>{{ customerService.customer()?.adresse }}</b></td>
+                </tr>
+                <tr>
+                    <td>Adresse Email: </td>
+                    <td><b>{{ customerService.customer()?.email }}</b></td>
+                </tr>
+                <tr>
+                    <td>Date de création: </td>
+                    <td><b>{{ customerService.customer()?.created_at }}</b></td>
+                </tr>
+                <tr>
+                    <td>Compte Courant: </td>
+                    <td><b>{{ currentAccount }}</b></td>
+                </tr>
+                <tr>
+                    <td>Compte Epargne: </td>
+                    <td><b>{{ savingAccount }}</b></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

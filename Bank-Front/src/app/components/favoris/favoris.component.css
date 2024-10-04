@@ -1,0 +1,35 @@
+
+.virement-favoris{
+    margin-top: 10px;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.virement-favoris-title{
+    font-size: 17px; 
+    font-weight: 600;
+    text-align: left;
+}
+.virement-favoris p{
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+.virement-list-add{
+    margin-top: 15px;
+    margin-right: 20px;
+}
+
+.virement-favoris-list{
+    display: flex;
+    flex-direction: row;
+}
+.virement-favoris-list img{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    cursor: pointer;
+}

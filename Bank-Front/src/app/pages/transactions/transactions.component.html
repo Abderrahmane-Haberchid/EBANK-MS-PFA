@@ -1,0 +1,108 @@
+<div class="wrapper">
+    <app-sidebar />  
+
+    <div class="wrapper-body">
+        <app-header title="Transactions, vue générale" />
+
+        <div class="transaction-body">
+
+            <div class="left-container">
+
+               <div class="account-info"> 
+
+                <div>
+
+                    <p style="font-size: 17px; font-weight: 600;">Choisir un compte: </p> 
+
+                    <div class="account-select">
+                        <select #selectedAccount class="form-control" (change)="handleSelectedAccount(selectedAccount.value)">
+                            <option value="cheque" selected>Compte chèque</option>
+                            <option value="epargne">Compte épargne</option>
+                        </select>
+                    </div>
+
+                    <div class="credit-account-container">
+
+                        <div class="credit-account-top">
+                            <span>Compte {{ typeAccount === 'cheque' ? "Chèque" : "Épargne" }}</span>
+                            <span id="high-arrow"><i class="fa-solid fa-circle-arrow-up"></i>
+                                 {{typeAccount === 'cheque' ? accountService.currentAccount()?.decouvert+' DH' : accountService.savingAccount()?.interestRate+' %' }} 
+                            </span>
+                        </div>
+
+                        <p style="font-size: 13px; font-weight: 500; margin-left: 20px;">La balance</p>
+                        <div class="credit-account-midle">
+                            <span>
+                                {{typeAccount === 'cheque' ? accountService.currentAccount()?.balance : accountService.savingAccount()?.balance }} DH
+                            </span>
+                        </div>    
+
+                        <div class="credit-account-bottom">
+
+                            <div style="font-size: 13px;" >
+                                <i class="fa-solid fa-arrow-up" style="color: green; margin-right: 8px;"></i>Reçu 
+                                <p>40,000.00 DH </p>    
+                            </div>
+                            <div style="border-right: 1.5px solid black;"></div>
+                            <div style="font-size: 13px;" >
+                                <i class="fa-solid fa-arrow-down" style="color:orangered;margin-right: 8px;"></i>Dépensé 
+                                <p> 1,000.00 DH </p>    
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="chartBars">
+                    <app-donut-chart />
+                </div>  
+
+
+              </div>
+
+             
+
+              <app-doublebars-chart />
+            </div>   
+            
+            <div class="right-container">
+                <div class="search-transaction">
+                    <input #search type="text" class="form-control"
+                            name="query"
+                            (ngModelChange)="handleSearch()"
+                            style="margin-bottom: 20px; height: 50px;"
+                            placeholder="Chercher une transaction..."
+                            [(ngModel)]="query" />
+                </div>
+                <div class="transaction-container">
+                    <div class="transaction-header">
+                        
+                          <p style="font-size: 17px; font-weight: 600;">Transactions({{ filteredTransaction().length }})</p>  
+                        
+                    </div>
+
+                    <div class="filter-transaction">
+                        <span (click)="filter.set('all')" [className]="filter() === 'all' && 'selectFilter'">Tous</span>
+                        <span (click)="filter.set('entre')" [className]="filter() === 'entre' && 'selectFilter'">Entrés</span>
+                        <span (click)="filter.set('sorti')" [className]="filter() === 'sorti' && 'selectFilter'">Sortis</span>
+                    </div>
+
+                    <div class="transactions-list">
+                        @for (transaction of filteredTransaction(); track $index) {
+                        
+                            <app-transaction
+                            [transactionName]="transaction.description" 
+                            [transactionType]="transaction.type" 
+                            [transactionAmount]="transaction.amount" 
+                            [transactionDate]="transaction.operationDate" /> 
+                        
+                        } 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

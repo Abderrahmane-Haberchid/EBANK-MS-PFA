@@ -1,0 +1,33 @@
+<div class="transaction-wrapper">
+    <div class="type-transaction">
+        @if (transactionType() === "CREDIT") {
+            <div class="virement-green">
+                CREDIT
+            </div>
+        }
+        @if (transactionType() === "DEBIT") {
+            <div class="virement-orange">
+                DEBIT
+            </div>
+        }
+       
+    </div>
+
+    <div class="transaction-title">
+        <p id="transaction-name">{{ transactionName() }}</p><br>
+        <p id="transaction-date">{{ transactionDate() }}</p>
+    </div>
+
+    @if (transactionType() === "CREDIT") {
+        <div class="transaction-montant-green">
+            + {{ transactionAmount() }} DH
+        </div>
+    }
+    @if (transactionType() === "DEBIT") {
+        <div class="transaction-montant-red">
+            - {{ transactionAmount() }} DH
+        </div>
+    }
+    
+
+</div>

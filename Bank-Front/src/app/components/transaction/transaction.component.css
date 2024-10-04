@@ -1,0 +1,51 @@
+.transaction-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 10px;
+    height: 70px;
+    overflow: scroll;
+}
+
+.virement-orange{
+    width:auto; 
+    font-size: 13px; 
+    background-color:orange; 
+    color: white; 
+    font-weight: 500;
+    border-radius: 10px; 
+    padding: 3px 5px;
+}
+.virement-green{
+    width:auto; 
+    font-size: 13px; 
+    background-color:green; 
+    color: white; 
+    font-weight: 500;
+    border-radius: 10px; 
+    padding: 3px 5px;
+}
+
+.transaction-title{
+    display: flex;
+    flex-direction: column;
+    line-height: 8px;
+}
+
+.transaction-montant-green{
+    color: green;
+    font-size: 14px;
+    font-weight: 600;
+}
+.transaction-montant-red{
+    font-size: 14px;
+    font-weight: 600;
+}
+#transaction-name{
+    font-size: 14px;
+    font-weight: 600;
+}
+#transaction-date{
+    font-size: 12px;
+}

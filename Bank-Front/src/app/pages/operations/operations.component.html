@@ -1,0 +1,113 @@
+<div class="wrapper">
+    <app-sidebar />
+
+    <div class="wrapper-body">
+       
+        <app-header title="Opérations" />
+
+        <div class="operation-body">
+
+            <div class="left-container">
+                <p style="font-size: 17px; font-weight: 600;">Compte à opérer: </p> 
+
+                <div class="account-select">
+                    <select class="form-control" #accountSelect (change)="onSelectedAccount(accountSelect.value)">
+                        <option value="cheque" selected>Compte chèque</option>
+                        <option value="epargne">Compte épargne</option>
+                    </select>
+                </div>
+                <div class="account-detail">
+                    <p>Compte chèque</p>
+                    <p style="font-size: 13px; font-weight: 500;">La balance</p>
+                    <p style="font-size: 20px; font-weight: 700; margin-top: -10px;">
+                        {{selectedAccount === 'cheque' ? accountService.currentAccount()?.balance : accountService.savingAccount()?.balance }} DH
+                    </p>
+                    <hr /> 
+                    <p style="font-size: 14px; font-weight: 400;">Numéro de compte</p>
+                    <p style="margin-top: -10px; margin-bottom: 20px; font-weight: 500;">
+                        {{selectedAccount === 'cheque' ? accountService.currentAccount()?.account_id : accountService.savingAccount()?.account_id }} 
+                    </p>
+                    <p style="font-size: 14px; font-weight: 500;">Nom du client</p>
+                    <p style="font-size: 17px; font-weight: 500; margin-top: -10px;">
+                        {{ customerService.customer()?.name?.toLocaleUpperCase() }}
+                    </p>
+                </div>
+
+                <app-favoris />
+            </div>
+
+
+            <div class="right-container">
+                <form>
+                <p style="font-size: 17px; font-weight: 600;">Opération :</p>   
+                <div class="operation-select">
+                    <select #operations (change)="onSelected(operations.value)" class="form-control">
+                        @if (selectedAccount === 'cheque') {
+                        <option selected>Sélectionner une opération</option>
+                        <option value="virement">Virement</option>
+                        <option value="versement">Versement</option>
+                        <option value="retrait">Retrait</option>
+                        <option value="toEpargne">Transfer vers compte épargne</option>
+                        }
+                        @if(selectedAccount === 'epargne') {
+                            <option selected>Sélectionner une opération</option>
+                            <option value="toCourant">Transfer vers compte courant</option>
+                        }
+                    </select>
+                </div> 
+
+                <div class="operation-virement">
+                    
+                        @if (selectedOpt === "virement") {
+                            <p style="font-size: 15px; font-weight: 500;">Bénificiaire :</p>   
+                            <input type="text" name="account_receiver" placeholder="Numéro de compte *" class="form-control" [(ngModel)]= "transfer.account_receiver" />
+                            <input type="text" name="amount" placeholder="Montant *" class="form-control" [(ngModel)]="transfer.amount" />
+                            <input type="text" name="description" placeholder="Message..." maxlength="200" class="form-control" [(ngModel)]="transfer.description" />
+                            <div style="display: flex; align-items: center; justify-content: start;">
+                            <input type="checkbox" id="checkbox" style="width: 22px;" (change)="addTofavorite = !addTofavorite" />
+                            <label style="margin-top: -15px; margin-left: 8px; font-size: 14px;">Ajouter au favoris</label>
+                            </div>
+                            @if (addTofavorite) {
+                                <input type="text" name="libele" placeholder="Libelé *" class="form-control" [(ngModel)]="transfer.libele" />
+                            }
+
+                            <button class="btn btn-outline-primary form-control" (click)="addTransferOperation()">Envoyer</button>
+                        }  
+                        @if (selectedOpt === 'retrait') {
+                            <p>Montant à retirer:</p>
+                            <input type="text" name="amount" placeholder="Montant *" class="form-control" [(ngModel)]="operation.amount" />
+                            <input type="text" name="description" placeholder="Description..." class="form-control" [(ngModel)]="operation.description" />
+                            <button (click)="addDebitOperation()" class="btn btn-outline-primary form-control">Effectuer le retrait</button> 
+                        }  
+                       
+                        @if (selectedOpt === 'versement') {
+                            <p>Montant à verser:</p>
+                            <input type="text" name="amount" placeholder="Montant *" class="form-control" [(ngModel)]="operation.amount" />
+                            <input type="text" name="description" placeholder="Description..." class="form-control" [(ngModel)]="operation.description" />
+                            <button (click)="addCreditOperation()" class="btn btn-outline-primary form-control">Effectuer le versement</button> 
+                                
+                        }
+                        @if (selectedOpt === 'toEpargne') {
+                            <p>Montant à verser:</p>
+                            <input type="text" name="amount" placeholder="Montant *" class="form-control" [(ngModel)]="transfer.amount" />
+                            <input type="text" name="description" placeholder="Description..." class="form-control" [(ngModel)]="transfer.description" />
+                            <button (click)="fromCurrentToSavingOperation()" class="btn btn-outline-primary form-control">Envoyer vers compte épargne</button> 
+                                
+                        }
+                        @if (selectedOpt === 'toCourant') {
+                            <p>Montant à verser:</p>
+                            <input type="text" name="amount" placeholder="Montant *" class="form-control" [(ngModel)]="transfer.amount" />
+                            <input type="text" name="description" placeholder="Description..." class="form-control" [(ngModel)]="transfer.description" />
+                            <button (click)="fromSavingToCurrentOperation()" class="btn btn-outline-primary form-control">Envoyer vers compte courant</button> 
+                                
+                        }
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>    
+
+
+
+

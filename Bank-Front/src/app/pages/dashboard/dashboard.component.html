@@ -1,0 +1,102 @@
+<div class="wrapper">
+    <app-sidebar />
+    <div class="wrapper-body">
+        <app-header title="Dashboard" />
+
+        <div class="dahsboard-body">
+            <div class="left-container">
+
+                <div class="credit-account-container">
+
+                    <div class="credit-account-top">
+                        <span>Compte Chèque</span>
+                        <span id="high-arrow" style="font-size: 14px;">Découvert <br /> <i class="fa-solid fa-circle-arrow-up"></i> {{ accountService.currentAccount()?.decouvert }} DH</span>
+                    </div>
+
+                    <div class="credit-account-midle">
+                        <span>{{ accountService.currentAccount()?.balance }} DH</span>
+                    </div>    
+
+                    <div class="credit-account-bottom">
+
+                        <div style="font-size: 13px;" >
+                            <i class="fa-solid fa-arrow-up" style="color: green; margin-right: 8px;"></i>Reçu 
+                            <p>{{sum}}</p>    
+                        </div>
+                        <div style="border-right: 1.5px solid black;"></div>
+                        <div style="font-size: 13px;" >
+                            <i class="fa-solid fa-arrow-down" style="color:orangered;margin-right: 8px;"></i>Dépensé 
+                            <p> 1,000.00 DH </p>    
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="saving-account-container">
+                    <div class="credit-account-top">
+                        <span>Compte Epargne</span>
+                        <span id="high-arrow" style="font-size: 14px;">Interêt <br /> <i class="fa-solid fa-circle-arrow-up"></i> {{ accountService.savingAccount()?.interestRate }}%</span>
+                    </div>
+                    <div class="credit-account-midle">
+                        @if (accountService.savingAccount() !== null) {
+                            <span>{{ accountService.savingAccount()?.balance }} DH</span>
+                        }
+                        @else {
+                            <span>Aucun compte</span>
+                        }
+                    </div>    
+                    <div class="credit-account-bottom">
+                        
+                    </div>
+                </div>
+
+                <div class="statis-container">
+                    <div class="statis-header">
+                        <p style="font-size: 17px; font-weight: 600;">Statistique</p>
+                        <div style="display: flex; justify-content: center; align-items: center; margin-left: 150px;">
+                            <div id="chartKey"></div>Montant Dépensé
+                        </div>
+                        
+                    </div>
+                    <app-bars-chart />
+                </div>
+
+            </div>
+
+
+            <div class="right-container">
+                <div class="transaction-container">
+                        <div class="transaction-header">
+                            
+                              <p style="font-size: 17px; font-weight: 600;">Transactions({{ filteredTransaction().length }})</p>  
+                              <p style="font-size: 14px;text-decoration: underline; cursor: pointer;">Voir tous</p>
+                            
+                        </div>
+
+                        <div class="filter-transaction">
+                            <span (click)="filter.set('all')" [className]="filter() === 'all' && 'selectFilter'">Tous</span>
+                            <span (click)="filter.set('entre')" [className]="filter() === 'entre' && 'selectFilter'">Entrés</span>
+                            <span (click)="filter.set('sorti')" [className]="filter() === 'sorti' && 'selectFilter'">Sortis</span>
+                        </div>
+
+                        <div class="transactions-list">
+                            @for (transaction of filteredTransaction(); track $index) {
+                            
+                                <app-transaction 
+                                [transactionName]="transaction.description" 
+                                [transactionType]="transaction.type" 
+                                [transactionAmount]="transaction.amount" 
+                                [transactionDate]="transaction.operationDate" /> 
+                            
+                            } 
+                        </div>
+                </div>
+
+                <app-favoris />
+            </div>
+        </div>
+    </div>
+</div>
+
+

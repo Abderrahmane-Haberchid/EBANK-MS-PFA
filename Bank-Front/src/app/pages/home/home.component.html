@@ -1,0 +1,40 @@
+<div class="wrapper">
+    <div class="wrapper-header">
+        <p>Gestion des comptes bancaires</p>
+    </div>
+
+    <div class="wrapper-body">
+        <div class="table-header">
+            <input type="text" placeholder="Chercher par CIN..." class="form-control" 
+                   [(ngModel)]="query">
+            <button class="btn btn-outline-success" (click)="handleSearch()">Chercher</button>
+
+            <button class="btn btn-primary" [routerLink]="['/register']" routerLinkActive="router-link-active"
+                    
+            >Créer un compte</button>
+            <button class="btn btn-danger" (click)="logout()">Se déconnecter</button>
+        </div>
+        <div class="table">
+            <table class="table table-stripped">
+                <thead>
+                <tr>
+                    <th>NOM ET PRENOM</th>
+                    <th>CIN</th>
+                    <th>EMAIL</th>
+                    <th>ADRESSE</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (customerService.customer()?.name !== '') {
+                    <tr [routerLink]="['/dashboard', customerService.customer()?.cin]" style="cursor: pointer;">
+                        <td>{{ customerService.customer()?.name }}</td>
+                        <td>{{ customerService.customer()?.cin }}</td>
+                        <td>{{ customerService.customer()?.email }}</td>
+                        <td>{{ customerService.customer()?.adresse }}</td>
+                    </tr>
+                }
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>

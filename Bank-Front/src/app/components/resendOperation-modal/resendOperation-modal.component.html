@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Effectuer virement <b>{{ favoriteOperation().libele }}</b> !</h2>
+<mat-dialog-content class="mat-typography">
+
+    <p>Montant: <b style="color: red;">{{ favoriteOperation().amount }} DH</b></p><br>
+    <p>Numéro de compte du bénificiare: <b>{{ favoriteOperation().accountId }}</b></p><br>
+    <p>Message: <b>{{ favoriteOperation().description }}</b></p>
+  
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Annuler</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="addTransferOperation()">Confirmer</button>
+</mat-dialog-actions>

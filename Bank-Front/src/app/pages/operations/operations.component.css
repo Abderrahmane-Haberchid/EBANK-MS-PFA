@@ -1,0 +1,51 @@
+.wrapper{
+    width: 80%;
+    min-height: 100vh;
+    display: flex;
+    margin-left: 250px;
+}
+
+.operation-body{
+    display: flex;
+    max-width: 100%;
+    margin-top: 50px;
+    margin-left: 30px;
+}
+
+.left-container{
+    width: 35%;
+
+}
+.account-select select{
+    width: 100%;
+    height: 50px;
+    background-color: var(--background-weak);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.account-detail{
+    padding: 20px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    background-color: var(--background-weak);
+    border-radius: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.right-container{
+    width: 60%;
+    margin-left: 40px;
+}
+.operation-select select{
+    width: 100%;
+    height: 50px;
+}
+
+.operation-virement{
+    margin-top: 40px;
+}
+.operation-virement input{
+    height: 50px;
+    margin-bottom: 15px;
+}

@@ -1,0 +1,19 @@
+<div class="virement-favoris">
+    <div class="virement-favoris-title">
+        Virement favoris
+    </div>
+    <div class="virement-favoris-list">
+        <div class="virement-list-add" 
+            [routerLink]="['/operations']" 
+            style="cursor: pointer;">
+            <img src="plus.png">
+            <p>Ajouter <br /> virement</p>
+        </div>
+        @for (operation of favoriteOperations(); track operation.operationId) {
+            <div class="virement-list-add" (click)="openDialog(operation.operationId)">
+                <img src="avatar.png"  />
+                <p>{{ operation.libele }}</p>
+            </div>
+        }
+       
+</div>

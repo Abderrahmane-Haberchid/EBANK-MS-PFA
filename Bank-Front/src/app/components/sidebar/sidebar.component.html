@@ -1,0 +1,35 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        SOGETREL
+    </div>
+    <div class="sidbar-body">
+        <ul id="sidebar-list">
+            <li [routerLink]="['/dashboard', customerCin]" routerLinkActive="actifLink">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </li>
+            <li [routerLink]="['/operations']" routerLinkActive="actifLink">
+                <i class="fa-brands fa-ubuntu"></i>
+                Opérations
+            </li>
+            <li [routerLink]="['/transactions']" routerLinkActive="actifLink">
+                <i class="fa-solid fa-paper-plane"></i>
+                Transactions                
+            </li>
+            <li [routerLink]="['/cartes']" routerLinkActive="actifLink">
+                <i class="fa-solid fa-credit-card"></i>
+                Cartes
+            </li>
+            <li [routerLink]="['/profile']" routerLinkActive="actifLink">
+                <i class="fa-solid fa-user"></i>
+                Profile
+            </li>
+            <li [routerLink]="['/home']" routerLinkActive="actifLink" (click)="quite()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Quitter
+            </li>
+        </ul>
+    </div>
+</div>
+
+<router-outlet />

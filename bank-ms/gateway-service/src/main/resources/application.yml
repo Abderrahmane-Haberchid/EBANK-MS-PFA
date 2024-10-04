@@ -1,0 +1,32 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
+
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          gateway:
+#            provider: my-provider
+#            client-id: bank-ms-client
+#            client-secret: FoZgsAsmNtL0WHsAlURXltWY6dJlvWKm
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "http://backend-gateway-client:8083/login/oauth2/code/{registrationId}"
+#            scope: openid, bank.read
+#        provider:
+#          my-provider:
+#            issuer-uri: "http://localhost:8080/realms/bank-realm"

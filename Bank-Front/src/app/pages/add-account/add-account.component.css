@@ -1,0 +1,32 @@
+.wrapper{
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.stepOne, .stepTwo, .stepThree, input{
+    width: 500px;
+    height: 40px;
+    margin-bottom: 20px;
+}
+.stepOne, .stepTwo, .stepThree, p{
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.info-user, .info-compte{
+    border: 1px solid gray;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.info-user p, .info-compte p{
+    width: 250px;
+    padding-left: 10px;
+    margin-top: -33px; 
+    background-color: var(--background-color);
+}

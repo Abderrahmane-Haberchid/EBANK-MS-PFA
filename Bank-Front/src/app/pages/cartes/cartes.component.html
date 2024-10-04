@@ -1,0 +1,83 @@
+<div class="wrapper">
+    <app-sidebar />
+    <div class="wrapper-body">
+        <app-header title="Mes cartes de crédit" />
+
+        <div class="cartes-body">
+            <div class="left-container">
+              <div class="carte-img">
+                <img src="card-blue.png" alt="credit-card" width="400px" />
+              </div>
+
+              <div class="card-info">
+                <table>
+                    <tr>
+                        <td>Etat : </td>
+                        @if (cardService.card().isEnabled) {
+                        <td><div style="width: 20px; height: 20px; background-color: green; border-radius: 50%;"></div></td>
+                        <td>Active</td>
+                        }
+                        @if (!cardService.card().isEnabled) {
+                            <td><div style="width: 20px; height: 20px; background-color: red; border-radius: 50%;"></div></td>
+                            <td>Inactive</td>
+                            }
+                    </tr> 
+                    <tr>   
+                        <td>Date de création:</td>
+                        <td colspan="3">{{ cardService.card().createdAt }}</td>
+                    </tr>
+                    <tr>
+                        <td>Date d'éxipartion:</td>
+                        <td colspan="2" style="color: orangered;">{{ cardService.card().expirationDate }}</td>
+                    </tr>
+                    
+                    </table>
+              </div>
+
+              
+            </div>
+            <div class="right-container">
+                <div class="quick-action">
+                    <table>
+                        <tr>
+                            <td><p><mat-slide-toggle 
+                                [checked]="cardService.card().isEnabled" 
+                                labelPosition="before" 
+                                (change)="setEnabled(cardService.card().isEnabled)">
+                                Activer ma carte
+                            </mat-slide-toggle></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><mat-slide-toggle 
+                                [checked]="cardService.card().onlinePayment" 
+                                labelPosition="before"
+                                (change)="setOnlinePayment(cardService.card().onlinePayment)">
+                                Activer paiement en ligne
+                            </mat-slide-toggle></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><mat-slide-toggle 
+                                [checked]="cardService.card().internationalPayment" 
+                                labelPosition="before"
+                                (change)="setInternationalPayment(cardService.card().internationalPayment)">
+                                Activer paiement à l'étranger
+                            </mat-slide-toggle></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><mat-slide-toggle 
+                                [checked]="cardService.card().bypasse" 
+                                labelPosition="before"
+                                (change)="setByPass(cardService.card().bypasse)">
+                                Activer ByPass
+                            </mat-slide-toggle></p></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+    
+</div>
+

@@ -1,0 +1,101 @@
+services:
+  postgres:
+    image: postgres:16.2
+    volumes:
+      # - /Users/abderahman/Developer/postgres_datapart:/var/lib/postgresql/data
+      - /Users/abderahman/postgres_data
+    environment:
+      POSTGRES_DB: bank_db_ms
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - keycloak_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.6
+    command: start
+    container_name: Keycloak
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/bank_db_ms
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - keycloak_network
+
+  discovery-service:
+    build: 
+      context: ./bank-ms/customer-service
+      dockerfile: Dockerfile
+    container_name: discovery-service  
+    ports:
+      - 8761:8761
+    platform: linux/amd64  
+    depends_on: 
+      - postgres  
+
+  config-service:
+    build: ./bank-ms/config-service
+    container_name: config-service  
+    ports:
+      - 9999:9999    
+    environment:
+      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka  
+    platform: linux/amd64   
+    depends_on:
+      - discovery-service  
+
+  account-service:
+    build: 
+      context: ./bank-ms/customer-service
+      dockerfile: Dockerfile
+    container_name: account-service  
+    ports:
+      - 8082:8082  
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db_ms
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      CONFIG_SERVICE_URL: http://config-service:9999
+      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka
+    platform: linux/amd64  
+    depends_on: 
+      - config-service
+
+  customer-service:
+    build: 
+      context: ./bank-ms/customer-service
+      dockerfile: Dockerfile
+    container_name: customer-service  
+    ports:
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db_ms
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres  
+      CONFIG_SERVICE_URL: http://config-service:9999
+      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka
+    platform: linux/amd64  
+    depends_on: 
+      - config-service  
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  keycloak_network:
+    driver: bridge

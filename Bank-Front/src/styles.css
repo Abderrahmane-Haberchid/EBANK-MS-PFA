@@ -1,0 +1,13 @@
+:root{
+    --primary-color: #3B5999;
+    --secondary-color: #8497BF; 
+    --background-color: #ECEFF6;
+    --background-weak: #cadeff;
+    --gray-color: #F2F2F2;
+}
+
+body{
+    background-color: var(--background-color);
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

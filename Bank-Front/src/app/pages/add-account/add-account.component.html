@@ -1,0 +1,94 @@
+<div class="wrapper">
+    @if(step === 'one'){
+    <div class="stepOne">
+        <form [formGroup]="userForm">
+        <p>Étape 1/3: Ajouter un membre</p>
+        <input type="text" name="name" class="form-control" placeholder="Nom et prénom..." [(ngModel)]="customer.name" formControlName="name">
+        <input type="mail" name="email" class="form-control" placeholder="Adresse email..." [(ngModel)]="customer.email" formControlName="email">
+        <input type="text" name="adresse" class="form-control" placeholder="Adresse postale" [(ngModel)]="customer.adresse" formControlName="adresse">
+        <input type="text" name="cin" class="form-control" placeholder="CIN..." [(ngModel)]="customer.cin" formControlName="cin">
+
+        <button class="btn btn-primary" (click)="creerMembre()" [disabled]="!userForm.valid">Créer membre</button>
+    </form>
+    </div>
+    }
+    
+    @if(step === 'two'){
+        <div class="stepTwo">
+            <form [formGroup]="currentAccountForm">
+            <p>Étape 2/3: Attribution du compte COURANT</p>
+            <label for="balanceCheque" style="font-size: 15px;">Balance initiale:</label>
+            <input type="number" name="balanceCheque" class="form-control" id="balanceCheque"
+                   placeholder="Montant à deposer dans le compte chèque..." formControlName="balance" [(ngModel)]="currentAccount().balance">
+           
+            <label style="font-size: 15px;">Découvert:</label>
+            <input type="number" name="decouvert" class="form-control" 
+                   placeholder="Découvert..." id="interestRate" formControlName="decouvert" [(ngModel)]="currentAccount().decouvert">
+           
+    
+            <button class="btn btn-primary" (click)="creerCompteCourant()" [disabled]="!currentAccountForm.valid">Attribuer</button>
+            <button class="btn btn-outline-danger m-2" (click)="backBtnToFirst()">Précedent</button>
+            </form>
+        </div>
+    }
+    @if(step === 'three'){
+        <div class="stepTwo">
+            <form [formGroup]="savingAccountForm">
+            <p>Étape 3/3: Attribution du compte EPRAGNE</p>
+            <label for="balanceSaving" style="font-size: 15px;">Balance initiale:</label>
+            <input type="number" name="balanceEpargne" class="form-control" id="balanceSaving"
+                   placeholder="Montant à deposer dans le compte épargne..." formControlName="balance" [(ngModel)]="savingAccount().balance">
+           
+            <label for="interestRate" style="font-size: 15px;">Taux d'intêret:</label>
+            <input type="number" name="interestRate" class="form-control" 
+                   placeholder="Taux d'intêret.." id="interestRate" formControlName="interestRate" [(ngModel)]="savingAccount().interestRate">
+           
+    
+            <button class="btn btn-primary" (click)="creerCompteEpargne()" [disabled]="!currentAccountForm.valid">Attribuer</button>
+            <button class="btn btn-outline-danger m-2" (click)="backBtnToTwo()">Précedent</button>
+            </form>
+        </div>
+        }
+
+    @if(step === 'recap'){
+        <div class="recap">
+
+            <div class="info-user">
+                <p>Informations du membre</p>
+                <label for="username">Nom complet</label>
+                <input type="text" class="form-control" disabled value="{{ customer.name }}">
+
+                <label for="username">Adresse amil</label>
+                <input type="text" class="form-control" disabled value="{{ customer.email }}">
+
+                <label for="username">Adresse postale</label>
+                <input type="text" class="form-control" disabled value="{{ customer.adresse }}">
+
+                <label for="username">CIN</label>
+                <input type="text" class="form-control" disabled value="{{ customer.cin }}">
+            </div>
+
+            <div class="info-compte">
+                <p>Information du compte courant</p>
+                <label for="username">Balance du compte chèque:</label>
+                <input type="text" class="form-control" disabled value="{{ currentAccount().balance }}">
+
+                <label for="username">Découvert du compte chèque</label>
+                <input type="text" class="form-control" disabled value="{{ currentAccount().decouvert }}">
+            </div>
+
+            <div class="info-compte">
+                <p>Information du compte épargne</p>
+                <label for="username">Balance du compte épargne:</label>
+                <input type="text" class="form-control" disabled value="{{ savingAccount().balance }}">
+
+                <label for="username">Taux d'intérêt du compte épargne:</label>
+                <input type="text" class="form-control" disabled value="{{ savingAccount().interestRate }}">
+            </div>
+
+            <button class="btn btn-success" (click)="create()">Je confirme ces informations</button>
+            <button class="btn btn-outline-danger m-2" (click)="backBtnToThree()">Précedent</button>
+
+        </div>
+    }
+</div>

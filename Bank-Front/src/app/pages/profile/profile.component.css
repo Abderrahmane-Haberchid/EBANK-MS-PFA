@@ -1,0 +1,15 @@
+.wrapper{
+    display: flex;
+}
+.wrapper-body{
+    margin-left: 270px;
+}
+.customer-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+.customer-info table tr td {
+    padding-top: 20px;
+}
