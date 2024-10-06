@@ -34,9 +34,7 @@ export class DashboardComponent implements OnInit{
     this.customerService.findUserByCIN(localStorage.getItem("customerCin")).subscribe({
       next: (res) => this.customerService.customer.set(res)
     });
-    setTimeout(() => {
-      this.getOperationsByAccountId();
-    }, 4000)
+    this.getOperationsByAccountId();
     
     this.getTotalCredit();
   }
