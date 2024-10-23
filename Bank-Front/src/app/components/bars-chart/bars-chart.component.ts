@@ -75,7 +75,7 @@ export class BarsChartComponent implements OnInit{
    // Getting operations by account id
 getOperationsByAccountId(){
   
-  this.accountService.operationsByAccountId(localStorage.getItem("currentAccountId")).subscribe({
+  this.accountService.operationsByAccountId().subscribe({
     next: (res) => {
       this.transactionList.set(res);
       

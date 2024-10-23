@@ -26,7 +26,7 @@
             </thead>
             <tbody>
                 @if (customerService.customer()?.name !== '') {
-                    <tr [routerLink]="['/dashboard', customerService.customer()?.cin]" style="cursor: pointer;">
+                    <tr style="cursor: pointer;" (click)="redirectToDashboard(customerService.customer()?.cin)">
                         <td>{{ customerService.customer()?.name }}</td>
                         <td>{{ customerService.customer()?.cin }}</td>
                         <td>{{ customerService.customer()?.email }}</td>

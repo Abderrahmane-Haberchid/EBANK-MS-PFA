@@ -14,12 +14,11 @@ import { OAuthService } from 'angular-oauth2-oidc';
 })
 export class CustomerService {
 
-  toastr = inject(ToastrService);
-  httpClient = inject(HttpClient);
-  router = inject(Router);
-  oauthService = inject(OAuthService);
-
-  
+  constructor(public toastr: ToastrService,
+    public httpClient: HttpClient,
+    public router: Router,
+    public oauthService: OAuthService
+  ){}
 
   BASE_URL: string = "http://localhost:8083";
 

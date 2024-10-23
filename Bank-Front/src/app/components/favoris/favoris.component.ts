@@ -48,7 +48,7 @@ export class FavorisComponent implements OnInit {
   favoriteOperations = signal<ITransaction[]>([]);
 
   getFavoriteOperations(){
-    this.accountService.favoriteOperations(localStorage.getItem("currentAccountId")).subscribe({
+    this.accountService.favoriteOperations().subscribe({
       next: (res) => {
         this.favoriteOperations.set(res);
       },

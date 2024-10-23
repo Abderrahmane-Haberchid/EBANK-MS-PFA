@@ -1,6 +1,6 @@
 import { CustomerService } from './customer.service';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ICurrentAccount } from '../interfaces/ICurrentAccount';
 import { ISavingAccount } from '../interfaces/ISavingAccount';
@@ -8,20 +8,30 @@ import { IOperation } from '../interfaces/IOperation';
 import { IVirement } from '../interfaces/IVirement';
 import { ITransaction } from '../interfaces/ITransaction';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
+export class AccountService implements OnInit{
+  cin: String|null = '';
+  accountId: String|null = '';
+
+  ngOnInit(): void {
+    this.cin = localStorage.getItem('customerCin');
+    this.accountId = localStorage.getItem('currentAccountId');
+
+    console.log(this.cin+ 'yoyoyoyoyoy');
+    
+  }
 
   http = inject(HttpClient);
   customerService = inject(CustomerService);
   oauthService = inject(OAuthService);
   handleChange = signal<boolean>(false);
+  router = inject(ActivatedRoute)
 
   BASE_URL = "http://localhost:8083";
-
-  cin = localStorage.getItem('customerCin');
 
   currentAccount = signal<ICurrentAccount | null>({
     balance: 0,
@@ -109,9 +119,9 @@ export class AccountService {
       }
     );
   }
-
-  operationsByAccountId(accountId: string|null): Observable<ITransaction[]>{
-    return this.http.get<ITransaction[]>(`${this.BASE_URL}/ACCOUNT-SERVICE/api/v1/account/operations/${accountId}`, 
+  // Getting all operations by account id retreived from localStorage
+  operationsByAccountId(): Observable<ITransaction[]>{
+    return this.http.get<ITransaction[]>(`${this.BASE_URL}/ACCOUNT-SERVICE/api/v1/account/operations/${this.accountId}`, 
       {
         headers: {
           "Authorization": `Bearer ${this.oauthService.getAccessToken()}`
@@ -119,9 +129,9 @@ export class AccountService {
       }
     );
   }
-
-  favoriteOperations(accountId: string|null): Observable<ITransaction[]>{
-    return this.http.get<ITransaction[]>(`${this.BASE_URL}/ACCOUNT-SERVICE/api/v1/account/operations/favorite/${accountId}`, 
+  // Getting all favorites operations by ccount id retreived from localStorage
+  favoriteOperations(): Observable<ITransaction[]>{
+    return this.http.get<ITransaction[]>(`${this.BASE_URL}/ACCOUNT-SERVICE/api/v1/account/operations/favorite/${this.accountId}`, 
       {
         headers: {
           "Authorization": `Bearer ${this.oauthService.getAccessToken()}`

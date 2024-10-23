@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { HttpHeaders } from '@angular/common/http';
+import { AccountService } from '../../services/account.service';
 
 @Component({
   selector: 'app-home',
@@ -13,19 +14,15 @@ import { HttpHeaders } from '@angular/common/http';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent{
 
   header: HttpHeaders|undefined;
   oauthService = inject(OAuthService)
-
-  ngOnInit(): void {
-    this.header = new HttpHeaders({
-      'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
-    })
-  }
-
   customerService = inject(CustomerService);
+  accountService = inject(AccountService);
   toastr = inject(ToastrService);
+
+  constructor(private router: Router){}
 
   query: string = '';
 
@@ -47,5 +44,13 @@ export class HomeComponent {
   logout(){
     this.oauthService.logOut();
   }
+
+  redirectToDashboard(cin: any){
+    this.router.navigate([`/dashboard/${cin}`]);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 5000);
+  }
+
 
 }

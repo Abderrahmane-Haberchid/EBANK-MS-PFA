@@ -19,34 +19,31 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DashboardComponent implements OnInit{
 
-  router = inject(ActivatedRoute);
-  customerService = inject(CustomerService);
-  accountService = inject(AccountService);
-  toastr = inject(ToastrService)
-
-  accountId: string|null = '';
-
-  ngOnInit(): void {
-    this.accountId = localStorage.getItem("currentAccountId");
-    this.getCurrentAccountByCin();
-    this.getSavingAccountByCin();
-    this.handleFilter();
-    this.customerService.findUserByCIN(localStorage.getItem("customerCin")).subscribe({
-      next: (res) => this.customerService.customer.set(res)
-    });
-    this.getOperationsByAccountId();
-    
-    this.getTotalCredit();
-  }
-  constructor(){
+  constructor(public accountService: AccountService, 
+              public customerService: CustomerService, 
+              public router: ActivatedRoute,
+              public toastr: ToastrService){            
+              
+                this.getCurrentAccountByCin();
+                this.getSavingAccountByCin();
+                this.handleFilter();
+                this.getOperationsByAccountId();              
     effect(() => {
       this.handleFilter();
       this.accountService.handleChange() === true && this.getOperationsByAccountId();
       this.accountService.handleChange.set(false);
     }, { allowSignalWrites: true })
   }
-  
 
+  ngOnInit(): void {
+    this.customerService.findUserByCIN(localStorage.getItem("customerCin")).subscribe({
+      next: (res) => this.customerService.customer.set(res)
+    });
+  
+  
+    this.getTotalCredit();
+  }
+  
   transactionList = signal<ITransaction[]>([]);
 
 
@@ -77,8 +74,11 @@ getCurrentAccountByCin(){
     next: (res) => {
       this.accountService.currentAccount.set(res);
       localStorage.setItem("currentAccountId", res.account_id);
+
+      console.log("storage set", res.account_id);
+      
     },
-    error: (err) => this.toastr.error("Erreur de connexion "+err.status, "Erreur")
+    error: (err) => this.toastr.error("Erreur de connexion "+err.status, "Compte Courant")
   })
 }
 
@@ -88,22 +88,28 @@ getSavingAccountByCin(){
     next: (res) => {
         this.accountService.savingAccount.set(res);
         localStorage.setItem("savingAccountId", res.account_id);
+        console.log("storage set", res.account_id);
     },
-    error: (err) => this.accountService.savingAccount.set(null),
+    error: (err) => {
+      this.accountService.savingAccount.set(null)
+      this.toastr.error("Erreur de connexion "+err.status, "Compte Epargne")  
+    },
   })
 }
 
 // Getting operations by account id
 getOperationsByAccountId(){
  
-  this.accountService.operationsByAccountId(this.accountId).subscribe({
+  this.accountService.operationsByAccountId().subscribe({
     next: (res) => {
       this.transactionList.set(res);
+      console.log("storage set", res);
     },
     error: () => this.toastr.error("Pas possible de charger les opérations !", "Opérations")
   });
 }
 sum:number = 3;
+
 getTotalCredit(){
   
   this.entre().map((e) => {
