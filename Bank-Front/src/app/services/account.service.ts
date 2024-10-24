@@ -13,17 +13,13 @@ import { ActivatedRoute } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService implements OnInit{
-  cin: String|null = '';
-  accountId: String|null = '';
+export class AccountService{
 
-  ngOnInit(): void {
-    this.cin = localStorage.getItem('customerCin');
-    this.accountId = localStorage.getItem('currentAccountId');
+    cin = localStorage.getItem('customerCin');
+    accountId = localStorage.getItem('currentAccountId');
 
-    console.log(this.cin+ 'yoyoyoyoyoy');
+  //  console.log("ciiiinnnn"+ this?.cin);
     
-  }
 
   http = inject(HttpClient);
   customerService = inject(CustomerService);

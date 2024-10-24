@@ -41,12 +41,12 @@
 
                             <div style="font-size: 13px;" >
                                 <i class="fa-solid fa-arrow-up" style="color: green; margin-right: 8px;"></i>Reçu 
-                                <p>40,000.00 DH </p>    
+                                <p>{{sumCreditOpt}} DH </p>    
                             </div>
                             <div style="border-right: 1.5px solid black;"></div>
                             <div style="font-size: 13px;" >
                                 <i class="fa-solid fa-arrow-down" style="color:orangered;margin-right: 8px;"></i>Dépensé 
-                                <p> 1,000.00 DH </p>    
+                                <p> {{sumDebitOpt}} DH </p>    
                             </div>
 
                         </div>
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="chartBars">
-                    <app-donut-chart />
+                    <app-donut-chart [creditSum]="sumCreditOpt" [debitSum]=5000></app-donut-chart>
                 </div>  
 
 

@@ -14,5 +14,6 @@ export class TransactionComponent {
   transactionType = input<string>();
   transactionAmount = input<number>();
   transactionDate = input<Date>();
+static sumCreditOpt: any;
 
 }

@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
+import { Component, Input, OnInit } from "@angular/core";
+import { NgxEchartsDirective} from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 
 @Component({
@@ -9,7 +9,13 @@ import { EChartsOption } from 'echarts';
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.css',
 })
-export class DonutChartComponent {
+export class DonutChartComponent implements OnInit {
+  ngOnInit(): void {
+    console.log(this.creditSum);
+  }
+
+  @Input() creditSum: number = 1;
+  @Input() debitSum:number = 2;
 
   options: EChartsOption = {
     tooltip: {
@@ -45,8 +51,8 @@ export class DonutChartComponent {
           show: false
         },
         data: [
-          { value: 1048, name: 'CREDIT' },
-          { value: 735, name: 'DEBIT' }
+          { value: this.creditSum, name: 'CREDIT' },
+          { value: this.debitSum, name: 'DEBIT' }
         ]
       }
     ]

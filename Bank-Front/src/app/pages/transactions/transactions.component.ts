@@ -1,10 +1,10 @@
+import { DonutChartComponent } from './../../components/donut-chart/donut-chart.component';
 import { ITransaction } from '../../interfaces/ITransaction';
-import { Component, computed, effect, signal, NgModule, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, signal, inject, AfterViewInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { TransactionComponent } from "../../components/transaction/transaction.component";
 import { FormsModule } from '@angular/forms';
-import { DonutChartComponent } from "../../components/donut-chart/donut-chart.component";
 import { DoublebarsChartComponent } from "../../components/doublebars-chart/doublebars-chart.component";
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
@@ -19,25 +19,25 @@ import { CustomerService } from '../../services/customer.service';
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'
 })
-export class TransactionsComponent implements OnInit{
+export class TransactionsComponent{
 
   accountService = inject(AccountService);
   customerService = inject(CustomerService);
   toastr = inject(ToastrService);
+  sumCreditOpt = 0;
+  sumDebitOpt = 0;
 
   constructor(){
+    this.getCurrentAccountByCin();
+    this.getSavingAccountByCin();
+    this.getOperationsByAccountId();
+
     effect(() => {
       this.handleFilter();
     }, { allowSignalWrites: true })
   }
-  ngOnInit(): void {
-    this.getCurrentAccountByCin();
-    this.getSavingAccountByCin();
-    this.getOperationsByAccountId();
-  }
 
   typeAccount: string = 'cheque';
-
   handleSelectedAccount(typeAccount: string){
     this.typeAccount = typeAccount;
   }
@@ -108,6 +108,12 @@ getOperationsByAccountId(){
   this.accountService.operationsByAccountId().subscribe({
     next: (res) => {
       this.transactionList.set(res);
+      res.map((o) => {
+        if(o.type === "CREDIT")
+          this.sumCreditOpt += o.amount;
+        else
+          this.sumDebitOpt += o.amount;
+      })
     },
     error: () => this.toastr.error("Pas possible de charger les opérations !", "Opérations")
   });

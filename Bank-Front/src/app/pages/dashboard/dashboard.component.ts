@@ -1,6 +1,6 @@
 import { ITransaction } from './../../interfaces/ITransaction';
 import { AccountService } from './../../services/account.service';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { TransactionComponent } from '../../components/transaction/transaction.component';
 import { FavorisComponent } from "../../components/favoris/favoris.component";
@@ -9,6 +9,7 @@ import { BarsChartComponent } from "../../components/bars-chart/bars-chart.compo
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
 import { ToastrService } from 'ngx-toastr';
+import { TransactionsComponent } from '../transactions/transactions.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,7 +28,7 @@ export class DashboardComponent implements OnInit{
                 this.getCurrentAccountByCin();
                 this.getSavingAccountByCin();
                 this.handleFilter();
-                this.getOperationsByAccountId();              
+                this.getOperationsByAccountId();     
     effect(() => {
       this.handleFilter();
       this.accountService.handleChange() === true && this.getOperationsByAccountId();
@@ -35,14 +36,16 @@ export class DashboardComponent implements OnInit{
     }, { allowSignalWrites: true })
   }
 
+  sumCreditOpt = 0;
+  sumDebitOpt = 0;
+
   ngOnInit(): void {
+
     this.customerService.findUserByCIN(localStorage.getItem("customerCin")).subscribe({
       next: (res) => this.customerService.customer.set(res)
     });
-  
-  
-    this.getTotalCredit();
   }
+
   
   transactionList = signal<ITransaction[]>([]);
 
@@ -74,8 +77,6 @@ getCurrentAccountByCin(){
     next: (res) => {
       this.accountService.currentAccount.set(res);
       localStorage.setItem("currentAccountId", res.account_id);
-
-      console.log("storage set", res.account_id);
       
     },
     error: (err) => this.toastr.error("Erreur de connexion "+err.status, "Compte Courant")
@@ -88,7 +89,6 @@ getSavingAccountByCin(){
     next: (res) => {
         this.accountService.savingAccount.set(res);
         localStorage.setItem("savingAccountId", res.account_id);
-        console.log("storage set", res.account_id);
     },
     error: (err) => {
       this.accountService.savingAccount.set(null)
@@ -103,20 +103,16 @@ getOperationsByAccountId(){
   this.accountService.operationsByAccountId().subscribe({
     next: (res) => {
       this.transactionList.set(res);
-      console.log("storage set", res);
+      res.map((o) => {
+        if(o.type === "CREDIT")
+          this.sumCreditOpt += o.amount;
+        else
+          this.sumDebitOpt += o.amount;
+      })
     },
     error: () => this.toastr.error("Pas possible de charger les opérations !", "Opérations")
   });
 }
-sum:number = 3;
 
-getTotalCredit(){
-  
-  this.entre().map((e) => {
-    this.sum += e.amount;
-    console.log(this.sum);
-    
-    })
-}
 
 }

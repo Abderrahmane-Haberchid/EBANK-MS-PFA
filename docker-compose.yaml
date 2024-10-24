@@ -2,8 +2,7 @@ services:
   postgres:
     image: postgres:16.2
     volumes:
-      # - /Users/abderahman/Developer/postgres_datapart:/var/lib/postgresql/data
-      - /Users/abderahman/postgres_data
+       - pg_data:/var/lib/postgresql/data 
     environment:
       POSTGRES_DB: bank_db_ms
       POSTGRES_USER: postgres
@@ -38,7 +37,7 @@ services:
 
   discovery-service:
     build: 
-      context: ./bank-ms/customer-service
+      context: ./bank-ms/discovery-service
       dockerfile: Dockerfile
     container_name: discovery-service  
     ports:
@@ -48,7 +47,9 @@ services:
       - postgres  
 
   config-service:
-    build: ./bank-ms/config-service
+    build: 
+      context: ./bank-ms/config-service
+      dockerfile: Dockerfile
     container_name: config-service  
     ports:
       - 9999:9999    
@@ -58,9 +59,20 @@ services:
     depends_on:
       - discovery-service  
 
+  gateway-service:
+    build: 
+      context: ./bank-ms/gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service  
+    ports:
+      - 8083:8083
+    platform: linux/amd64  
+    depends_on: 
+      - config-service      
+
   account-service:
     build: 
-      context: ./bank-ms/customer-service
+      context: ./bank-ms/account-service
       dockerfile: Dockerfile
     container_name: account-service  
     ports:
@@ -92,10 +104,36 @@ services:
     depends_on: 
       - config-service  
 
-volumes:
-  postgres_data:
-    driver: local
+  card-service:
+    build: 
+      context: ./bank-ms/card-service
+      dockerfile: Dockerfile
+    container_name: card-service  
+    ports:
+      - 8084:8084
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db_ms
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres  
+      CONFIG_SERVICE_URL: http://config-service:9999
+      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka
+    platform: linux/amd64  
+    depends_on: 
+      - config-service      
 
+  front-end-angular:
+    build: 
+      context: ./Bank-Front
+      dockerfile: Dockerfile
+    container_name: front-eend-angular
+    ports:
+      - '4300:80'
+    expose:
+      - '4300'
+
+volumes:
+  pg_data:
+    driver: local
 networks:
   keycloak_network:
     driver: bridge
