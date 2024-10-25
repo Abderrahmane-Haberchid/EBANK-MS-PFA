@@ -51,6 +51,8 @@ services:
     platform: linux/amd64  
     depends_on: 
       - postgres  
+    networks:
+      - keycloak_network  
 
   config-service:
     build: 
@@ -71,6 +73,8 @@ services:
     depends_on:
       discovery-service:
         condition: service_healthy
+    networks:
+      - keycloak_network    
 
   gateway-service:
     build: 
@@ -89,6 +93,8 @@ services:
     depends_on: 
       config-service:
         condition: service_healthy      
+    networks:
+      - keycloak_network    
 
   account-service:
     build: 
@@ -113,6 +119,8 @@ services:
     depends_on: 
       config-service:
         condition: service_healthy
+    networks:
+      - keycloak_network    
 
   customer-service:
     build: 
@@ -137,6 +145,8 @@ services:
     depends_on: 
       account-service:
         condition: service_healthy
+    networks:
+      - keycloak_network    
 
   card-service:
     build: 
@@ -157,6 +167,8 @@ services:
     depends_on: 
       account-service:
         condition: service_healthy
+    networks:
+      - keycloak_network    
 
   front-end-angular:
     build: 
@@ -167,6 +179,8 @@ services:
       - '4300:80'
     expose:
       - '4300'
+    networks:
+      - keycloak_network    
 
 volumes:
   pg_data:
