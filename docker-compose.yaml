@@ -13,7 +13,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:23.0.6
     command: start
-    container_name: Keycloak
+    container_name: keycloak
     environment:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: 8080
@@ -81,6 +81,9 @@ services:
       context: ./bank-ms/gateway-service
       dockerfile: Dockerfile
     container_name: gateway-service  
+    environment:
+      - KEYCLOAK_SERVICE_URL=http://keycloak:8080/realms/ebank-pfa
+      - CONFIG_SERVICE_URL=http://config-service:9999
     ports:
       - '8083:8083'
     expose:
@@ -163,9 +166,13 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
       - CONFIG_SERVICE_URL=http://config-service:9999
       - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/8084/actuator/health"]
+      interval: 10s
+      retries: 6  
     platform: linux/amd64  
     depends_on: 
-      account-service:
+      customer-service:
         condition: service_healthy
     networks:
       - keycloak_network    
@@ -179,6 +186,9 @@ services:
       - '4300:80'
     expose:
       - '4300'
+    depends_on:
+      card-service:
+        condition: service_healthy  
     networks:
       - keycloak_network    
 

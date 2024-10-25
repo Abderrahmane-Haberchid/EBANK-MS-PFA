@@ -12,7 +12,7 @@ import { provideHttpClient } from '@angular/common/http';
 export const authCodeFlowConfig: AuthConfig = {
   issuer: 'http://localhost:8080/realms/ebank-pfa',
   tokenEndpoint: 'http://localhost:8080/realms/ebank-pfa/protocol/openid-connect/token',
-  redirectUri: 'http://localhost:4200/home',
+  redirectUri: 'http://localhost:4300/home',
   clientId: 'bank-ms-client',
   responseType: 'code',
   scope: 'openid profile'

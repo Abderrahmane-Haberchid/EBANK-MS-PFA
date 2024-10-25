@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .cors(corsSpec -> {
                     corsSpec.configurationSource(request -> {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+                        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:4300", "http://localhost:80"));
                         configuration.setAllowedMethods(List.of("*"));
                         configuration.setAllowedHeaders(List.of("*"));
                         return configuration;
