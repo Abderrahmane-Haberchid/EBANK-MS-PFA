@@ -32,6 +32,7 @@ public class SecurityConfig {
                 // Setting Session Policy to STATELESS
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(auth -> auth
+                        .pathMatchers("/actuator/health").permitAll()
                         .anyExchange().authenticated())
                 // Still need to handle Authority => jwt.
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));

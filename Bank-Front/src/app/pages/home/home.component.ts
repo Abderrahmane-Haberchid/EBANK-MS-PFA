@@ -35,7 +35,6 @@ export class HomeComponent{
       },
       error: (err) => {
         err !== 200 && this.toastr.error("Membre introuvable !", "Erreur");
-        console.log(this.oauthService.getAccessToken());
         
       },
     });

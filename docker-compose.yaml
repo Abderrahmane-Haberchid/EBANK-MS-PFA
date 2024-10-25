@@ -116,7 +116,7 @@ services:
       - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
-      interval: 10s
+      interval: 15s
       retries: 6  
     platform: linux/amd64  
     depends_on: 
@@ -141,8 +141,8 @@ services:
       - CONFIG_SERVICE_URL=http://config-service:9999
       - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
     healthcheck:
-      test: ["CMD", "curl", "-f", "http:localhost:8081/actuator/health"]
-      interval: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 15s
       retries: 6
     platform: linux/amd64  
     depends_on: 
@@ -168,7 +168,7 @@ services:
       - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/8084/actuator/health"]
-      interval: 10s
+      interval: 15s
       retries: 6  
     platform: linux/amd64  
     depends_on: 
@@ -183,11 +183,11 @@ services:
       dockerfile: Dockerfile
     container_name: front-end-angular
     ports:
-      - '4300:80'
+      - '4200:80'
     expose:
-      - '4300'
+      - '4200'
     depends_on:
-      card-service:
+      gateway-service:
         condition: service_healthy  
     networks:
       - keycloak_network    
