@@ -15,7 +15,8 @@ export const authCodeFlowConfig: AuthConfig = {
   redirectUri: 'http://localhost:4200/home',
   clientId: 'bank-ms-client',
   responseType: 'code',
-  scope: 'openid profile'
+  scope: 'openid profile',
+  requireHttps: false
 }
 
 function initializeOAuth(oauthService: OAuthService): Promise<void> {
