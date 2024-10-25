@@ -41,7 +41,13 @@ services:
       dockerfile: Dockerfile
     container_name: discovery-service  
     ports:
-      - 8761:8761
+      - '8761:8761'
+    expose:
+      - '8761'  
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      retries: 6  
     platform: linux/amd64  
     depends_on: 
       - postgres  
@@ -52,12 +58,19 @@ services:
       dockerfile: Dockerfile
     container_name: config-service  
     ports:
-      - 9999:9999    
+      - '9999:9999'    
+    expose:
+      - '9999'  
     environment:
-      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka  
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka  
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9999/actuator/health" ]
+      interval: 10s
+      retries: 6
     platform: linux/amd64   
     depends_on:
-      - discovery-service  
+      discovery-service:
+        condition: service_healthy
 
   gateway-service:
     build: 
@@ -65,10 +78,17 @@ services:
       dockerfile: Dockerfile
     container_name: gateway-service  
     ports:
-      - 8083:8083
+      - '8083:8083'
+    expose:
+      - '8083'  
+    healthcheck: 
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      retries: 6
     platform: linux/amd64  
     depends_on: 
-      - config-service      
+      config-service:
+        condition: service_healthy      
 
   account-service:
     build: 
@@ -76,16 +96,23 @@ services:
       dockerfile: Dockerfile
     container_name: account-service  
     ports:
-      - 8082:8082  
+      - '8082:8082'  
+    expose:
+      - '8082'  
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db_ms
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      CONFIG_SERVICE_URL: http://config-service:9999
-      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      retries: 6  
     platform: linux/amd64  
     depends_on: 
-      - config-service
+      config-service:
+        condition: service_healthy
 
   customer-service:
     build: 
@@ -93,16 +120,23 @@ services:
       dockerfile: Dockerfile
     container_name: customer-service  
     ports:
-      - 8081:8081
+      - '8081:8081'
+    expose:
+      - '8081'  
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db_ms
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres  
-      CONFIG_SERVICE_URL: http://config-service:9999
-      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http:localhost:8081/actuator/health"]
+      interval: 10s
+      retries: 6
     platform: linux/amd64  
     depends_on: 
-      - config-service  
+      account-service:
+        condition: service_healthy
 
   card-service:
     build: 
@@ -110,22 +144,25 @@ services:
       dockerfile: Dockerfile
     container_name: card-service  
     ports:
-      - 8084:8084
+      - '8084:8084'
+    expose:
+      - '8084'  
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db_ms
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres  
-      CONFIG_SERVICE_URL: http://config-service:9999
-      DISCOVERY_SERVICE_URL: http://discovery-service:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
     platform: linux/amd64  
     depends_on: 
-      - config-service      
+      account-service:
+        condition: service_healthy
 
   front-end-angular:
     build: 
       context: ./Bank-Front
       dockerfile: Dockerfile
-    container_name: front-eend-angular
+    container_name: front-end-angular
     ports:
       - '4300:80'
     expose:
