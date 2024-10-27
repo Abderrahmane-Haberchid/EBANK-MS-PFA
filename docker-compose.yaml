@@ -12,189 +12,193 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:23.0.6
-    command: ["start-dev", "--import-realm"]
+    command: 
+      - start-dev
     container_name: keycloak
     environment:
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 8080
-      KC_HOSTNAME_STRICT_BACKCHANNEL: false
-      KC_HTTP_ENABLED: true
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HEALTH_ENABLED: true
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres/bank_db_ms
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
+      - KC_HOSTNAME_PORT=8080
+      - KC_HOSTNAME_STRICT_BACKCHANNEL=false
+      - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
+      - KC_HTTP_ENABLED=true
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_HOSTNAME_STRICT=false
+      - KC_HEALTH_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres/bank_db_ms
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=postgres
     ports:
-      - 8080:8080
+      - '8080:8080'
+    expose:
+      - '8080'  
     restart: always
     depends_on:
       - postgres
     networks:
       - keycloak_network
 
-  # discovery-service:
-  #   build: 
-  #     context: ./bank-ms/discovery-service
-  #     dockerfile: Dockerfile
-  #   container_name: discovery-service  
-  #   ports:
-  #     - '8761:8761'
-  #   expose:
-  #     - '8761'  
-  #   healthcheck:
-  #     test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
-  #     interval: 10s
-  #     retries: 6  
-  #   platform: linux/amd64  
-  #   depends_on: 
-  #     - postgres  
-  #   networks:
-  #     - keycloak_network  
+  discovery-service:
+    build: 
+      context: ./bank-ms/discovery-service
+      dockerfile: Dockerfile
+    container_name: discovery-service  
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761'  
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      retries: 6  
+    platform: linux/amd64  
+    depends_on: 
+      - postgres  
+    networks:
+      - keycloak_network  
 
-  # config-service:
-  #   build: 
-  #     context: ./bank-ms/config-service
-  #     dockerfile: Dockerfile
-  #   container_name: config-service  
-  #   ports:
-  #     - '9999:9999'    
-  #   expose:
-  #     - '9999'  
-  #   environment:
-  #     - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka  
-  #   healthcheck:
-  #     test: [ "CMD", "curl", "-f", "http://localhost:9999/actuator/health" ]
-  #     interval: 10s
-  #     retries: 6
-  #   platform: linux/amd64   
-  #   depends_on:
-  #     discovery-service:
-  #       condition: service_healthy
-  #   networks:
-  #     - keycloak_network    
+  config-service:
+    build: 
+      context: ./bank-ms/config-service
+      dockerfile: Dockerfile
+    container_name: config-service  
+    ports:
+      - '9999:9999'    
+    expose:
+      - '9999'  
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9999/actuator/health" ]
+      interval: 10s
+      retries: 6
+    platform: linux/amd64   
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - keycloak_network    
 
-  # gateway-service:
-  #   build: 
-  #     context: ./bank-ms/gateway-service
-  #     dockerfile: Dockerfile
-  #   container_name: gateway-service  
-  #   environment:
-  #     - KEYCLOAK_SERVICE_URL=http://localhost:8080/realms/ebank-pfa
-  #     - CONFIG_SERVICE_URL=http://config-service:9999
-  #   ports:
-  #     - '8083:8083'
-  #   expose:
-  #     - '8083'  
-  #   healthcheck: 
-  #     test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
-  #     interval: 10s
-  #     retries: 6
-  #   platform: linux/amd64  
-  #   depends_on: 
-  #     config-service:
-  #       condition: service_healthy      
-  #   networks:
-  #     - keycloak_network    
+  gateway-service:
+    build: 
+      context: ./bank-ms/gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service  
+    environment:
+      - KEYCLOAK_SERVICE_URL=http://localhost:8080/realms/ebank-pfa
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    ports:
+      - '8083:8083'
+    expose:
+      - '8083'  
+    healthcheck: 
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      retries: 6
+    platform: linux/amd64  
+    depends_on: 
+      config-service:
+        condition: service_healthy      
+    networks:
+      - keycloak_network    
 
-  # account-service:
-  #   build: 
-  #     context: ./bank-ms/account-service
-  #     dockerfile: Dockerfile
-  #   container_name: account-service  
-  #   ports:
-  #     - '8082:8082'  
-  #   expose:
-  #     - '8082'  
-  #   environment:
-  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
-  #     - SPRING_DATASOURCE_USERNAME=postgres
-  #     - SPRING_DATASOURCE_PASSWORD=postgres
-  #     - CONFIG_SERVICE_URL=http://config-service:9999
-  #     - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
-  #     interval: 15s
-  #     retries: 6  
-  #   platform: linux/amd64  
-  #   depends_on: 
-  #     config-service:
-  #       condition: service_healthy
-  #   networks:
-  #     - keycloak_network    
+  account-service:
+    build: 
+      context: ./bank-ms/account-service
+      dockerfile: Dockerfile
+    container_name: account-service  
+    ports:
+      - '8082:8082'  
+    expose:
+      - '8082'  
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 15s
+      retries: 6  
+    platform: linux/amd64  
+    depends_on: 
+      config-service:
+        condition: service_healthy
+    networks:
+      - keycloak_network    
 
-  # customer-service:
-  #   build: 
-  #     context: ./bank-ms/customer-service
-  #     dockerfile: Dockerfile
-  #   container_name: customer-service  
-  #   ports:
-  #     - '8081:8081'
-  #   expose:
-  #     - '8081'  
-  #   environment:
-  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
-  #     - SPRING_DATASOURCE_USERNAME=postgres
-  #     - SPRING_DATASOURCE_PASSWORD=postgres
-  #     - CONFIG_SERVICE_URL=http://config-service:9999
-  #     - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-  #     interval: 15s
-  #     retries: 6
-  #   platform: linux/amd64  
-  #   depends_on: 
-  #     account-service:
-  #       condition: service_healthy
-  #   networks:
-  #     - keycloak_network    
+  customer-service:
+    build: 
+      context: ./bank-ms/customer-service
+      dockerfile: Dockerfile
+    container_name: customer-service  
+    ports:
+      - '8081:8081'
+    expose:
+      - '8081'  
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 15s
+      retries: 6
+    platform: linux/amd64  
+    depends_on: 
+      account-service:
+        condition: service_healthy
+    networks:
+      - keycloak_network    
 
-  # card-service:
-  #   build: 
-  #     context: ./bank-ms/card-service
-  #     dockerfile: Dockerfile
-  #   container_name: card-service  
-  #   ports:
-  #     - '8084:8084'
-  #   expose:
-  #     - '8084'  
-  #   environment:
-  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
-  #     - SPRING_DATASOURCE_USERNAME=postgres
-  #     - SPRING_DATASOURCE_PASSWORD=postgres
-  #     - CONFIG_SERVICE_URL=http://config-service:9999
-  #     - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost/8084/actuator/health"]
-  #     interval: 15s
-  #     retries: 6  
-  #   platform: linux/amd64  
-  #   depends_on: 
-  #     customer-service:
-  #       condition: service_healthy
-  #   networks:
-  #     - keycloak_network    
+  card-service:
+    build: 
+      context: ./bank-ms/card-service
+      dockerfile: Dockerfile
+    container_name: card-service  
+    ports:
+      - '8084:8084'
+    expose:
+      - '8084'  
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bank_db_ms
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - CONFIG_SERVICE_URL=http://config-service:9999
+      - DISCOVERY_SERVICE_URL=http://discovery-service:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/8084/actuator/health"]
+      interval: 15s
+      retries: 6  
+    platform: linux/amd64  
+    depends_on: 
+      customer-service:
+        condition: service_healthy
+    networks:
+      - keycloak_network    
 
-  # front-end-angular:
-  #   build: 
-  #     context: ./Bank-Front
-  #     dockerfile: Dockerfile
-  #   container_name: front-end-angular
-  #   ports:
-  #     - '4200:80'
-  #   expose:
-  #     - '4200'
-  #   depends_on:
-  #     gateway-service:
-  #       condition: service_healthy  
-  #   networks:
-  #     - keycloak_network    
+  front-end-angular:
+    build: 
+      context: ./Bank-Front
+      dockerfile: Dockerfile
+    container_name: front-end-angular
+    ports:
+      - '4200:80'
+    expose:
+      - '4200'
+    depends_on:
+      gateway-service:
+        condition: service_healthy  
+    networks:
+      - keycloak_network    
 
 volumes:
   pg_data:
     driver: local
 networks:
   keycloak_network:
-    driver: bridge

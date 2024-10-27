@@ -152,7 +152,7 @@ export class OperationsComponent implements OnInit{
           this.getCurrentAccountByCin();
         this.getSavingAccountByCin();
         },
-        error: () => this.toastr.error("Une erreur s'est produite ! Merci de réessayer", "Erreur")
+        error: () =>  this.toastr.error("Une erreur s'est produite ! Merci de réessayer", "Erreur")
       })
     //}
   }
